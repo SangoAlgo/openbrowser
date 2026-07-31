@@ -1,19 +1,43 @@
+export interface A11yRefInfo {
+  role: string;
+  name: string;
+}
+
 export class LocatorCache {
-  private cache: Map<string, string> = new Map();
+  private domCache: Map<string, string> = new Map();
+  private a11yCache: Map<string, A11yRefInfo> = new Map();
 
   set(ref: string, stableSelector: string): void {
-    this.cache.set(ref.toLowerCase(), stableSelector);
+    this.domCache.set(ref.toLowerCase(), stableSelector);
   }
 
   resolve(ref: string): string | null {
-    return this.cache.get(ref.toLowerCase()) || null;
+    return this.domCache.get(ref.toLowerCase()) || null;
   }
 
-  getAll(): Map<string, string> {
-    return new Map(this.cache);
+  setA11y(ref: string, info: A11yRefInfo): void {
+    this.a11yCache.set(ref.toLowerCase(), info);
+  }
+
+  resolveA11y(ref: string): A11yRefInfo | null {
+    return this.a11yCache.get(ref.toLowerCase()) || null;
+  }
+
+  getAllDOM(): Map<string, string> {
+    return new Map(this.domCache);
+  }
+
+  getAllA11y(): Map<string, A11yRefInfo> {
+    return new Map(this.a11yCache);
   }
 
   clear(): void {
-    this.cache.clear();
+    this.domCache.clear();
+    this.a11yCache.clear();
+  }
+
+  clearTab(): void {
+    this.domCache.clear();
+    this.a11yCache.clear();
   }
 }
